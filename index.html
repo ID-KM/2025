@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <style>
+        /* Basic Reset and Full-Screen Setup */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden; /* Prevents scrollbars */
+        }
+
+        /* Body Styling with Flexbox for Centering and Animated Background */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* Stack content vertically */
+            color: #ffffff;
+            
+            /* Animated Gradient Background */
+            background: linear-gradient(45deg, #00003f, #2c003e, #0f0f0f);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+        }
+
+        /* Heading Style */
+        h1 {
+            font-size: 8vw;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px; /* Add space below heading */
+        }
+
+        /* Keyframes for the Background Animation */
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Memory Feature Styling */
+        #memory-container {
+            text-align: center;
+        }
+
+        #name-input {
+            background-color: rgba(0, 0, 0, 0.3);
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-right: 10px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        #name-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #save-button, #edit-button {
+            background-color: #ffffff;
+            color: #1e1e1e;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        #save-button:hover, #edit-button:hover {
+            background-color: #dddddd;
+        }
+
+        #memory-message {
+            font-size: 1.75rem;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Welcome. 2025</h1>
+
+    <div id="memory-container">
+        <!-- Input form, shown on first visit -->
+        <div id="input-container">
+            <input type="text" id="name-input" placeholder="What's your name?">
+            <button id="save-button">Save Name</button>
+        </div>
+
+        <!-- Personalized message, shown on return visits -->
+        <div id="message-container" style="display: none;">
+            <p id="memory-message"></p>
+            <button id="edit-button">Edit</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get references to all the interactive elements
+            const nameInput = document.getElementById('name-input');
+            const saveButton = document.getElementById('save-button');
+            const memoryMessage = document.getElementById('memory-message');
+            const editButton = document.getElementById('edit-button');
+            const inputContainer = document.getElementById('input-container');
+            const messageContainer = document.getElementById('message-container');
+
+            // --- Main Logic: Check localStorage on page load ---
+            const savedName = localStorage.getItem('userName');
+
+            if (savedName) {
+                // If a name is found, show the personalized message
+                memoryMessage.textContent = `A memory for: ${savedName}`;
+                inputContainer.style.display = 'none';
+                messageContainer.style.display = 'block';
+            } else {
+                // If no name is found, show the input form
+                inputContainer.style.display = 'block';
+                messageContainer.style.display = 'none';
+            }
+
+            // --- Event Listener for the "Save Name" button ---
+            saveButton.addEventListener('click', () => {
+                const userName = nameInput.value.trim();
+                if (userName) {
+                    // Save the name to localStorage
+                    localStorage.setItem('userName', userName);
+                    
+                    // Update the message and switch views
+                    memoryMessage.textContent = `A memory for: ${userName}`;
+                    inputContainer.style.display = 'none';
+                    messageContainer.style.display = 'block';
+                }
+            });
+
+            // --- Event Listener for the "Edit" button ---
+            editButton.addEventListener('click', () => {
+                // Pre-fill the input with the saved name
+                nameInput.value = localStorage.getItem('userName') || '';
+                
+                // Switch views to show the input form again
+                inputContainer.style.display = 'block';
+                messageContainer.style.display = 'none';
+                nameInput.focus(); // Focus the input field for convenience
+            });
+        });
+    </script>
+</body>
+</html>
